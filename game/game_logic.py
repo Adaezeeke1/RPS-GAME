@@ -31,7 +31,7 @@ class RockPaperScissorsGame:
         print(f"Python: {self.score['computer']}")
 
     def play_again(self):
-        return get_valid_input("\nPlay again? \n\nY for Yes, \nN to Exit\n\n", ['y', 'n']) == 'y'
+        return get_valid_input("\nPlay again? \n\nY for Yes, \nN to Exit\n\n", ['y', 'n']).lower() == 'y'
 
     def play_round(self):
         player_choice = self.player.get_choice()
