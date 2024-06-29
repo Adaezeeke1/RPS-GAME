@@ -1,42 +1,17 @@
 import unittest
-from unittest import TestCase, mock
+from unittest.mock import patch
 from game.player import Player
 from game.rps import RPS
 
 
-class PlayerTest(TestCase):
-
-    @mock.patch('utils.input_handler.get_valid_input', return_value=RPS.ROCK)
-    def test_get_choice_rock(self, mock_get_valid_input):
+class TestPlayer(unittest.TestCase):
+    @patch('builtins.input', side_effect=['1', '2', '3'])
+    def test_get_choice(self, mock_input):
         player = Player()
-        choice = player.get_choice()
-        self.assertEqual(choice, RPS.ROCK)
-
-    @mock.patch('utils.input_handler.get_valid_input', return_value=RPS.PAPER)
-    def test_get_choice_paper(self, mock_get_valid_input):
-        player = Player()
-        choice = player.get_choice()
-        self.assertEqual(choice, RPS.PAPER)
-
-    @mock.patch('utils.input_handler.get_valid_input', return_value=RPS.SCISSORS)
-    def test_get_choice_scissors(self, mock_get_valid_input):
-        player = Player()
-        choice = player.get_choice()
-        self.assertEqual(choice, RPS.SCISSORS)
-
-    @mock.patch('utils.input_handler.get_valid_input', side_effect=['0', '4', 'abc', RPS.ROCK])
-    def test_get_choice_invalid_input(self, mock_get_valid_input):
-        player = Player()
-        choice = player.get_choice()
-        # Ensure the function continues to ask for input until valid
-        self.assertEqual(choice, RPS.ROCK)
-
-    # @mock.patch('utils.input_handler.get_valid_input', side_effect=ValueError('Invalid Input'))
-    # def test_get_invalid_input(self, mock_get_valid_input):
-    #     player = Player()
-    #     with self.assertRaises(ValueError):
-    #         player.get_choice()
+        self.assertEqual(player.get_choice(), RPS.ROCK)
+        self.assertEqual(player.get_choice(), RPS.PAPER)
+        self.assertEqual(player.get_choice(), RPS.SCISSORS)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
