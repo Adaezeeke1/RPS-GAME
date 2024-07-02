@@ -32,12 +32,31 @@ st.write(f"Computer: {st.session_state.game.score['computer']}")
 '''
 '''
 
-# User choice
-user_choice = st.selectbox("Choose your move:", options=list(
-    RPS), format_func=lambda x: x.name.capitalize())
+st.subheader(f"Round {st.session_state['round']} of 3")
 
-# Play button with loading animation, only displayed if round <= 3
-if st.session_state.round <= 3 and st.button("Play"):
+'''
+'''
+
+# User choice buttons
+col1, col2, col3 = st.columns(3)
+user_choice = None
+
+with col1:
+    if st.button("Rock"):
+        user_choice = RPS.ROCK
+        # st.image(get_choice_image(RPS.ROCK))
+with col2:
+    if st.button("Paper"):
+        user_choice = RPS.PAPER
+        # st.image(get_choice_image(RPS.PAPER))
+with col3:
+    if st.button("Scissors"):
+        user_choice = RPS.SCISSORS
+        # st.image(get_choice_image(RPS.SCISSORS))
+
+
+# Play button with loading animation, only displayed if a choice has been made
+if user_choice and st.session_state.round <= 3:
     # Display loading spinner
     with st.spinner("Playing..."):
         time.sleep(2)  # Simulate a delay for animation effect
@@ -57,15 +76,21 @@ if st.session_state.round <= 3 and st.button("Play"):
         st.image(get_choice_image(computer_choice),
                  caption="Computer", use_column_width=True)
 
-    # Display result
-    st.write(st.session_state.game.final_winner_message())
-
     # Update round
     st.session_state.round += 1
 
-# Check if the series is complete
 if st.session_state.round > 3:
-    st.write("Best of 3 series complete!")
+    winner_message = st.session_state.game.final_winner_message()
+
+    # Display final winner message with larger font size
+    st.markdown(
+        f"<h1 style='text-align: center; color: white;'>{winner_message}</h1>",
+        unsafe_allow_html=True
+    )
+
+  # Only release balloons if the user wins
+    if st.session_state.game.score['player'] > st.session_state.game.score['computer']:
+        st.balloons()
 
     # Automatically reset scores after the final round
     st.session_state.game = RockPaperScissorsGame()
